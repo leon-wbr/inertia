@@ -95,6 +95,8 @@ class InertiaService
     if ($this->request->hasHeader(Header::INERTIA)) {
       return $responseFactory->createResponse()
         ->withHeader('Content-Type', 'application/json; charset=utf-8')
+        ->withHeader('Vary', Header::INERTIA)
+        ->withHeader(HEADER::INERTIA, 'true')
         ->withBody(
           $streamFactory->createStream(json_encode($data, JSON_THROW_ON_ERROR))
         );
