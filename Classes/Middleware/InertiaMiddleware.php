@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class InertiaMiddleware implements MiddlewareInterface
 {
@@ -59,8 +60,11 @@ class InertiaMiddleware implements MiddlewareInterface
   {
     $extensionConfiguration = $this->extensionConfiguration->get('inertia');
 
-    if (isset($extensionConfiguration['manifestPath']) && is_file($extensionConfiguration['manifestPath'])) {
-      return hash_file('xxh128', $extensionConfiguration['manifestPath']);
+    $manifestPath = $extensionConfiguration['manifestPath'] ?? null;
+    $manifestPath = GeneralUtility::getFileAbsFileName($manifestPath);
+
+    if (!empty($manifestPath) && is_file($manifestPath)) {
+      return hash_file('xxh128', $manifestPath);
     }
 
     return null;
