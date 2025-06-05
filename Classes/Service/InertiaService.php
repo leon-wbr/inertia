@@ -89,6 +89,7 @@ class InertiaService
       'props' => array_merge($this->sharedProps, $props),
       'version' => $this->version,
       'rootView' => $this->rootView,
+      'url' => $this->request ? $this->request->getUri()->getPath() : '',
     ];
 
     if ($this->request->hasHeader(Header::INERTIA)) {
