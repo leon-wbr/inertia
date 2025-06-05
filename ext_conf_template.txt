@@ -1,0 +1,2 @@
+# cat=basic; type=string; label=Manifest Path: Path to the manifest file
+manifestPath = EXT:inertia/Resources/Public/Build/.vite/manifest.json

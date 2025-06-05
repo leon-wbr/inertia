@@ -1,0 +1,23 @@
+{
+  "name": "leon-wbr/inertia",
+  "description": "A TYPO3 adapter for InertiaJS.",
+  "require": {
+    "typo3/cms-core": "^13.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "LeonWbr\\Inertia\\": "Classes/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Leon Weber",
+      "email": "lw.leonweber@gmail.com"
+    }
+  ],
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "inertia"
+    }
+  }
+}
