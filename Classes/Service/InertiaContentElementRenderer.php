@@ -35,6 +35,10 @@ class InertiaContentElementRenderer
   {
     $result = [];
     foreach ($array as $key => $value) {
+      if (is_numeric($key)) {
+        $result[$key] = $value;
+        continue;
+      }
       $camelKey = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $key))));
       $result[$camelKey] = is_array($value) ? $this->convertKeysToCamelCase($value) : $value;
     }
