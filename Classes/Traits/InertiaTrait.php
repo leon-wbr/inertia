@@ -7,8 +7,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * NOTE: While this trait was a cool idea, it is not used in the current implementation.
- * It does not work as intended since accessing the request automatically like this is rarely (if ever) possible.
+ * NOTE: While this trait was a cool idea, it does not work as intended since 
+ * accessing the request automatically like this is rarely (if ever) possible.
+ * 
+ * Of course, $GLOBALS['TYPO3_REQUEST'] will work, but is not a good practice.
  */
 trait InertiaTrait
 {
