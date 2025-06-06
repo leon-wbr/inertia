@@ -6,6 +6,7 @@ use LeonWbr\Inertia\Traits\InertiaTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
+/** @todo Reimplement and test. */
 final class AppViewHelper extends AbstractViewHelper
 {
   use InertiaTrait;
@@ -24,6 +25,6 @@ final class AppViewHelper extends AbstractViewHelper
     $id = $this->inertia->getRootView();
     $page = [];
 
-    return '<div id="' . $id . '" data-page="' . json_encode($page) . '"></div>';
+    return '<div id="' . $id . '" data-page="' . json_encode($page, JSON_THROW_ON_ERROR) . '"></div>';
   }
 }

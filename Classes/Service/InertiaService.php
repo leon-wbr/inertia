@@ -112,7 +112,7 @@ class InertiaService
 
     $view = $viewFactory->create($viewData);
     $view->assignMultiple([
-      'pageData' => json_encode($data, JSON_THROW_ON_ERROR),
+      'pageData' => $data,
       'rootView' => $this->rootView,
       'title' => $component,
     ]);
