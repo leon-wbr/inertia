@@ -12,6 +12,8 @@ use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 class InertiaService
 {
@@ -102,11 +104,12 @@ class InertiaService
         );
     }
 
+    $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+    $config = $configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
+
     $viewFactory = GeneralUtility::makeInstance(ViewFactoryInterface::class);
     $viewData = new ViewFactoryData(
-      templateRootPaths: ['EXT:inertia/Resources/Private/Templates'],
-      partialRootPaths: ['EXT:inertia/Resources/Private/Partials'],
-      layoutRootPaths: ['EXT:inertia/Resources/Private/Layouts'],
+      templateRootPaths: $config['view']['templateRootPaths'] ?? [],
       request: $this->request,
     );
 

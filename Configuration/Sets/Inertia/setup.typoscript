@@ -26,3 +26,11 @@ inertia {
 
     10 < tt_content.inertia_renderer.20
 }
+
+plugin.tx_inertia {
+    view {
+        templateRootPaths {
+            0 = EXT:inertia/Resources/Private/Templates/
+        }
+    }
+}
