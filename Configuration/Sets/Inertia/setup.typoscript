@@ -8,6 +8,7 @@ page {
         debug = 1
         no_cache = 1
         noPageTitle = 1
+        showWebsiteTitle= 0
     }
 
     10 < tt_content.inertia_renderer.20
@@ -22,6 +23,7 @@ inertia {
         admPanel = 0
         debug = 1
         no_cache = 1
+        noPageTitle = 1
     }
 
     10 < tt_content.inertia_renderer.20
