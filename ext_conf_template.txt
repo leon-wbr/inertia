@@ -1,2 +1,2 @@
 # cat=basic; type=string; label=Manifest Path: Path to the manifest file
-manifestPath = 
+manifestPath = _assets/vite/.vite/manifest.json
