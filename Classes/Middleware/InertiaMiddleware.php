@@ -57,7 +57,7 @@ class InertiaMiddleware implements MiddlewareInterface
     return $response;
   }
 
-  public function version()
+  public function version(): ?string
   {
     $extensionConfiguration = $this->extensionConfiguration->get('inertia');
 
@@ -76,7 +76,7 @@ class InertiaMiddleware implements MiddlewareInterface
   }
 
   /** @todo Inertia::always resolveValidationErrors */
-  public function share(ServerRequestInterface $request)
+  public function share(ServerRequestInterface $request): array
   {
     return [];
   }
