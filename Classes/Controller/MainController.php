@@ -41,37 +41,6 @@ class MainController extends ActionController
       $contentElement = $this->contentElementRenderer->renderRecord($contentElement);
     }
 
-    $this->assetCollector->addInlineJavaScript(
-      'vite-refresh',
-      "import RefreshRuntime from 'http://localhost:5173/@react-refresh'
-        RefreshRuntime.injectIntoGlobalHook(window)
-        window.\$RefreshReg\$ = () => {}
-        window.\$RefreshSig\$ = () => (type) => type
-        window.__vite_plugin_react_preamble_installed__ = true",
-      [
-        'type' => 'module',
-      ],
-      [
-        'priority' => true,
-      ]
-    );
-
-    $this->assetCollector->addJavaScript(
-      'vite-client',
-      'http://localhost:5173/@vite/client',
-      [
-        'type' => 'module',
-      ]
-    );
-
-    $this->assetCollector->addJavaScript(
-      'vite-main',
-      'http://localhost:5173/src/main.tsx',
-      [
-        'type' => 'module',
-      ]
-    );
-
     return $this->inertia->render('Default', [
       'title' => $page['title'] ?? null,
       'message' => 'Welcome to the Inertia Site Package!',
