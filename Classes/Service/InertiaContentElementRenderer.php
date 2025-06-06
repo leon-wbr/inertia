@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace LeonWbr\Inertia\Service;
 
+use TYPO3\CMS\Core\Collection\LazyRecordCollection;
+use TYPO3\CMS\Core\Domain\RecordFactory;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class InertiaContentElementRenderer
 {
-  public function __construct(private readonly ContentObjectRenderer $cObj) {}
+  public function __construct(
+    private readonly ContentObjectRenderer $cObj,
+    private readonly RecordFactory $recordFactory
+  ) {}
 
   public function renderRecord(array $record, ?array $allowProperties = [], bool $useCamelCase = true): array
   {
@@ -17,16 +22,31 @@ class InertiaContentElementRenderer
       'source' => $record['uid'],
     ];
 
+    $contentElement = $this->recordFactory->createResolvedRecordFromDatabaseRow('tt_content', $record);
+    $contentElementArr = $contentElement->toArray();
+
+    foreach ($contentElement->toArray() as $key => $value) {
+      if ($value instanceof LazyRecordCollection) {
+        if ($contentElementArr[$key] instanceof LazyRecordCollection || !is_array($contentElementArr[$key])) {
+          $contentElementArr[$key] = [];
+        }
+
+        foreach ($value->getIterator() as $subKey => $subValue) {
+          $contentElementArr[$key][$subKey] = $subValue->toArray();
+        }
+      }
+    }
+
     $html = $this->cObj->cObjGetSingle('RECORDS', $conf);
-    $data = empty($allowProperties) ? $record : array_intersect_key($record, array_flip($allowProperties));
+    $properties = empty($allowProperties) ? $contentElementArr : array_intersect_key($contentElementArr, array_flip($allowProperties));
 
     if ($useCamelCase) {
-      $data = $this->convertKeysToCamelCase($data);
+      $properties = $this->convertKeysToCamelCase($contentElementArr);
     }
 
     return [
       'CType' => $record['CType'],
-      'data' => $data,
+      'data' => $properties,
       'html' => $html,
     ];
   }
