@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class InertiaMiddleware implements MiddlewareInterface
@@ -26,14 +27,14 @@ class InertiaMiddleware implements MiddlewareInterface
     ServerRequestInterface $request,
     RequestHandlerInterface $handler,
   ): ResponseInterface {
-    if (!$request->hasHeader(Header::INERTIA)) {
-      return $handler->handle($request)->withHeader('Vary', Header::INERTIA);
-    }
-
     $this->inertia = $this->inertia->fromRequest($request);
     $this->inertia->setVersion($this->version($request));
     $this->inertia->share($this->share($request));
     $this->inertia->setRootView($this->rootView);
+
+    if (!$request->hasHeader(Header::INERTIA)) {
+      return $handler->handle($request)->withHeader('Vary', Header::INERTIA);
+    }
 
     $request = $request->withAttribute('inertia', $this->inertia);
     $request = $request->withQueryParams(["type" => "inertia"] + $request->getQueryParams());
@@ -60,8 +61,12 @@ class InertiaMiddleware implements MiddlewareInterface
   {
     $extensionConfiguration = $this->extensionConfiguration->get('inertia');
 
-    $manifestPath = $extensionConfiguration['manifestPath'] ?? null;
-    $manifestPath = GeneralUtility::getFileAbsFileName($manifestPath);
+    $manifestPath = $extensionConfiguration['manifestPath'] ?? "null";
+    if (str_starts_with($manifestPath, 'EXT:')) {
+      $manifestPath = GeneralUtility::getFileAbsFileName($manifestPath);
+    } else {
+      $manifestPath = Environment::getPublicPath() . '/' . $manifestPath;
+    }
 
     if (!empty($manifestPath) && is_file($manifestPath)) {
       return hash_file('xxh128', $manifestPath);
