@@ -78,8 +78,6 @@ class InertiaMiddleware implements MiddlewareInterface
   /** @todo Inertia::always resolveValidationErrors */
   public function share(ServerRequestInterface $request)
   {
-    return [
-      'SharedProp' => 'Example Shared Value',
-    ];
+    return [];
   }
 }
