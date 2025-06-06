@@ -6,6 +6,10 @@ use LeonWbr\Inertia\Service\InertiaService;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * NOTE: While this trait was a cool idea, it is not used in the current implementation.
+ * It does not work as intended since accessing the request automatically like this is rarely (if ever) possible.
+ */
 trait InertiaTrait
 {
   protected ?InertiaService $inertia = null;
