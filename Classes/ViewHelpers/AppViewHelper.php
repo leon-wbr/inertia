@@ -6,7 +6,11 @@ use LeonWbr\Inertia\Traits\InertiaTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
-/** @todo Reimplement and test. */
+/** 
+ * @todo Reimplement and test. 
+ * @see LeonWbr\Inertia\Service\InertiaService->render()
+ * @see ../../Resources/Private/Templates/App.html
+ */
 final class AppViewHelper extends AbstractViewHelper
 {
   use InertiaTrait;

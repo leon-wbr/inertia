@@ -41,6 +41,7 @@ class InertiaMiddleware implements MiddlewareInterface
       return $handler->handle($request)->withHeader('Vary', Header::INERTIA);
     }
 
+    /** @todo This typeNum change is terrible for us in TYPO3. Must find a better way. */
     $request = $request->withAttribute('inertia', $this->inertia);
     $request = $request->withQueryParams(["type" => "inertia"] + $request->getQueryParams());
     $response = $handler->handle($request);
@@ -82,9 +83,13 @@ class InertiaMiddleware implements MiddlewareInterface
     return null;
   }
 
-  /** @todo Inertia::always resolveValidationErrors */
-  public function share(ServerRequestInterface $request): array
-  {
+  /** 
+   * @todo Inertia::always($this->resolveValidationErrors($request));
+   * Is this possible in TYPO3? Are errors stored in the session?
+   */
+  public function share(
+    ServerRequestInterface $request
+  ): array {
     return [];
   }
 
