@@ -25,3 +25,13 @@ This is currently a proof-of-concept implementation with extremely limited funct
 ## Frontend Implementation
 
 For a practical example of how to structure your frontend with React and Vite, check out our [Inertia Sitepackage](https://github.com/leon-wbr/inertia-sitepackage) template.
+
+## Contributing
+
+We welcome contributions! 
+
+Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on how to get involved.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.
