@@ -12,6 +12,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class InertiaMiddleware implements MiddlewareInterface
@@ -19,7 +20,7 @@ class InertiaMiddleware implements MiddlewareInterface
   use InertiaTrait;
 
   protected string $rootView = 'app';
-  
+
   protected ?ExtensionConfiguration $extensionConfiguration = null;
 
   public function injectExtensionConfiguration(ExtensionConfiguration $extensionConfiguration): void
@@ -44,15 +45,17 @@ class InertiaMiddleware implements MiddlewareInterface
     $request = $request->withQueryParams(["type" => "inertia"] + $request->getQueryParams());
     $response = $handler->handle($request);
 
-    /** @todo Implement onVersionChange */
-    // if ($request->getMethod() === 'GET' && $request->hasHeader(Header::VERSION) && $request->getHeader(Header::VERSION)[0] === $this->inertia->getVersion()) {
-    //   $response = $this->onVersionChange($request, $response);
-    // }
+    if (
+      $request->getMethod() === 'GET'
+      && $request->hasHeader(Header::VERSION)
+      && $request->getHeader(Header::VERSION)[0] !== $this->inertia->getVersion()
+    ) {
+      $response = $this->onVersionChange($request);
+    }
 
-    /** @todo Implement onEmptyResponse */
-    // if ($response->getStatusCode() === 200 && empty($response->getBody())) {
-    //   $response = $this->onEmptyResponse($request, $response);
-    // }
+    if ($response->getStatusCode() === 200 && empty($response->getBody())) {
+      $response = $this->onEmptyResponse($request);
+    }
 
     if ($response->getStatusCode() === 302 && in_array($request->getMethod(), ['PUT', 'PATCH', 'DELETE'])) {
       $response->withStatus(303);
@@ -83,5 +86,26 @@ class InertiaMiddleware implements MiddlewareInterface
   public function share(ServerRequestInterface $request): array
   {
     return [];
+  }
+
+  /** 
+   * @todo Check if TYPO3 stores the previous URL in the session.
+   */
+  public function onEmptyResponse(
+    ServerRequestInterface $request
+  ): ResponseInterface {
+    $url = $request->getHeader('referer')[0] ?? '/';
+    return new RedirectResponse($url);
+  }
+
+  public function onVersionChange(
+    ServerRequestInterface $request,
+  ): ResponseInterface {
+    /** @todo Rewrite for TYPO3 */
+    // if ($request->hasSession()) {
+    //   $request->session()->reflash();
+    // }
+
+    return $this->inertia->location((string) $request->getUri());
   }
 }

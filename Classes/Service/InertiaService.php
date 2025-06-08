@@ -7,6 +7,7 @@ namespace LeonWbr\Inertia\Service;
 use LeonWbr\Inertia\Support\Header;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Http\ResponseFactory;
 use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -125,5 +126,14 @@ class InertiaService
       ->withBody(
         $streamFactory->createStream($view->render($this->rootView))
       );
+  }
+
+  /** 
+   * @todo There is a line in the official Laravel implementation which I do not understand:
+   * See: https://github.com/inertiajs/inertia-laravel/blob/6e7606ffcc871dca1e55208ee8a4ceefeb51c22f/src/ResponseFactory.php#L174
+   */
+  public function location(string|RedirectResponse $url): ResponseInterface
+  {
+    return $url instanceof RedirectResponse ? $url : new RedirectResponse($url);
   }
 }
