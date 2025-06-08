@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LeonWbr\Inertia\Middleware;
 
-use LeonWbr\Inertia\Service\InertiaService;
 use LeonWbr\Inertia\Support\Header;
+use LeonWbr\Inertia\Traits\InertiaTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -16,12 +16,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class InertiaMiddleware implements MiddlewareInterface
 {
-  protected string $rootView = 'app';
+  use InertiaTrait;
 
-  public function __construct(
-    protected InertiaService $inertia,
-    protected readonly ExtensionConfiguration $extensionConfiguration,
-  ) {}
+  protected string $rootView = 'app';
+  
+  protected ?ExtensionConfiguration $extensionConfiguration = null;
+
+  public function injectExtensionConfiguration(ExtensionConfiguration $extensionConfiguration): void
+  {
+    $this->extensionConfiguration = $extensionConfiguration;
+  }
 
   public function process(
     ServerRequestInterface $request,
