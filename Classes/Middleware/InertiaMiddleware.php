@@ -41,9 +41,7 @@ class InertiaMiddleware implements MiddlewareInterface
       return $handler->handle($request)->withHeader('Vary', Header::INERTIA);
     }
 
-    /** @todo This typeNum change is terrible for us in TYPO3. Must find a better way. */
     $request = $request->withAttribute('inertia', $this->inertia);
-    $request = $request->withQueryParams(["type" => "inertia"] + $request->getQueryParams());
     $response = $handler->handle($request);
 
     if (
