@@ -7,9 +7,9 @@ namespace LeonWbr\Inertia\Service;
 use LeonWbr\Inertia\Support\Header;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Http\HtmlResponse;
+use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Http\RedirectResponse;
-use TYPO3\CMS\Core\Http\ResponseFactory;
-use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
@@ -84,9 +84,6 @@ class InertiaService
 
   public function render(string $component, array $props = []): ResponseInterface
   {
-    $responseFactory = GeneralUtility::makeInstance(ResponseFactory::class);
-    $streamFactory = GeneralUtility::makeInstance(StreamFactory::class);
-
     $data = [
       'component' => $component,
       'props' => array_merge($this->sharedProps, $props),
@@ -96,13 +93,11 @@ class InertiaService
     ];
 
     if ($this->request->hasHeader(Header::INERTIA)) {
-      return $responseFactory->createResponse()
-        ->withHeader('Content-Type', 'application/json; charset=utf-8')
-        ->withHeader('Vary', Header::INERTIA)
-        ->withHeader(HEADER::INERTIA, 'true')
-        ->withBody(
-          $streamFactory->createStream(json_encode($data, JSON_THROW_ON_ERROR))
-        );
+      return new JsonResponse($data, 200, [
+        'Content-Type' => 'application/json; charset=utf-8',
+        'Vary' => Header::INERTIA,
+        HEADER::INERTIA => 'true',
+      ]);
     }
 
     $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
@@ -121,11 +116,7 @@ class InertiaService
       'title' => $component,
     ]);
 
-    return $responseFactory->createResponse(200)
-      ->withHeader('Content-Type', 'text/html; charset=utf-8')
-      ->withBody(
-        $streamFactory->createStream($view->render($this->rootView))
-      );
+    return new HtmlResponse($view->render($this->rootView));
   }
 
   /** 
